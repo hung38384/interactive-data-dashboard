@@ -5,8 +5,14 @@ from sqlalchemy import create_engine
 # Đường dẫn tới thư mục chứa CSV
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
+# Ensure database directory exists
+DB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'database')
+if not os.path.exists(DB_DIR):
+    os.makedirs(DB_DIR)
+
 # Tạo kết nối tới SQLite (sẽ tạo file stock_data.db nếu chưa có)
-engine = create_engine('sqlite:///stock_data.db')
+db_path = os.path.join(DB_DIR, 'stock_data.db')
+engine = create_engine(f'sqlite:///{db_path}')
 
 # Hàm làm sạch và load dữ liệu
 def load_csv_to_sqlite():

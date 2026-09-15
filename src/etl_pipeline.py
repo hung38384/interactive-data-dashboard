@@ -1,3 +1,4 @@
+import os
 import schedule
 import time
 from datetime import datetime
@@ -6,6 +7,12 @@ import pandas as pd
 import sqlite3
 
 api = SimpleFinancialData()
+
+# Ensure database directory exists
+DB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'database')
+if not os.path.exists(DB_DIR):
+    os.makedirs(DB_DIR)
+DB_PATH = os.path.join(DB_DIR, 'stock_data.db')
 
 def etl_job():
     print(f"[{datetime.now()}] 🔄 Bắt đầu ETL...")
@@ -37,7 +44,7 @@ def etl_job():
         full_df.dropna(inplace=True)
 
         # 3. Lưu vào SQLite
-        conn = sqlite3.connect('stock_data.db')
+        conn = sqlite3.connect(DB_PATH)
         full_df.to_sql('stocks', conn, if_exists='append', index=False)
         conn.close()
 

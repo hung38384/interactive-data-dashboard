@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+*.log
+*.db
+database/stock_data.db
+data/
+src/data/

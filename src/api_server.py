@@ -3,19 +3,31 @@ from flask_cors import CORS
 import pandas as pd
 import os
 from datetime import datetime, timedelta
+import sqlite3
 
 app = Flask(__name__)
-DB_PATH = "stock_data.db"
+# Get the absolute path to the database folder
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "database", "stock_data.db")
 CORS(app)  # Enable CORS for all routes
+
+def query_db(query, args=()):
+    """Chạy query và trả kết quả dạng dict."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cur = conn.execute(query, args)
+    rows = cur.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
 
 class FinancialAPI:
     def __init__(self):
-        self.data_folder = 'data'
+        self.data_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
     
     def load_all_data(self):
         """Load all stocks data"""
         try:
-            filepath = '/Users/admin/Desktop/interactive_data_dashboard/src/data/all_stocks_data.csv'
+            filepath = os.path.join(self.data_folder, 'all_stocks_data.csv')
             if os.path.exists(filepath):
                 data = pd.read_csv(filepath)
                 data['Date'] = pd.to_datetime(data['Date'])
@@ -144,15 +156,6 @@ class FinancialAPI:
             }
         }
     
-    def query_db(query, args=()):
-        """Chạy query và trả kết quả dạng dict."""
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        cur = conn.execute(query, args)
-        rows = cur.fetchall()
-        conn.close()
-        return [dict(row) for row in rows]
-
 # Initialize API
 api = FinancialAPI()
 

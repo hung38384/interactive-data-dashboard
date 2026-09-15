@@ -7,7 +7,7 @@ class SimpleFinancialData:
     def __init__(self):
         # Các cổ phiếu phổ biến để demo
         self.stocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'NVDA', 'META']
-        self.data_folder = 'data'
+        self.data_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
         
         # Tạo thư mục data nếu chưa có
         if not os.path.exists(self.data_folder):

@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 class FinancialDashboard:
     def __init__(self):
         self.app = dash.Dash(__name__)
-        self.data_folder = 'data'
+        self.data_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
         self.setup_layout()
         self.setup_callbacks()
     
